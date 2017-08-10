@@ -2,6 +2,11 @@
 ec2stack_region: ap-northeast-1
 ec2stack_ssh_location: 127.0.0.1/32
 
+ec2stack_images:
+  ap-northeast-1:
+    amazon: ami-3bd3c45c  # Amazon Linux AMI 2017.03.1 (HVM), SSD Volume Type
+    ubuntu: ami-ea4eae8c  # Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
+
 ec2stack_networks:
   ap-northeast-1:
     default:
@@ -22,6 +27,10 @@ ec2stack_groups:
         cidr_ip: "{{ ec2stack_ssh_location }}"
 
 ec2stack_config:
+  name: sample
+  image: amazon
+  instance_type: t2.micro
+  key_name: ec2stack
   vpc: default
   groups:
     - ssh

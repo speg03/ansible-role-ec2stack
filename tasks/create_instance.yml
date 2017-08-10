@@ -1,0 +1,20 @@
+---
+- include: create_networks.yml
+
+- name: Create the instance
+  ec2:
+    region: "{{ ec2stack_region }}"
+    image: "{{
+      ec2stack_images[ec2stack_region][ec2stack_config.image]
+      | default(ec2stack_config.image)
+    }}"
+    instance_type: "{{ ec2stack_config.instance_type }}"
+    vpc_subnet_id: "{{ subnets | map(attribute='id') | shuffle | first }}"
+    assign_public_ip: "{{ ec2stack_config.assign_public_ip | default('yes') }}"
+    instance_profile_name: "{{ ec2stack_config.instance_profile_name | default() }}"
+    groups: "{{ ec2stack_config.groups }}"
+    instance_tags:
+      Name: "{{ ec2stack_config.name }}"
+    key_name: "{{ ec2stack_config.key_name }}"
+    exact_count: 1
+    count_tag: Name
