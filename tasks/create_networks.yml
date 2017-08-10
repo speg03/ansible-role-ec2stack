@@ -45,3 +45,12 @@
   register: result
 
 - set_fact: subnets="{{ result.results | map(attribute='subnet') | list }}"
+
+- name: Create security groups
+  ec2_group:
+    region: "{{ ec2stack_region }}"
+    vpc_id: "{{ vpc.id }}"
+    name: "{{ item }}"
+    description: "{{ ec2stack_groups[item].description }}"
+    rules: "{{ ec2stack_groups[item].rules }}"
+  with_items: "{{ ec2stack_config.groups }}"

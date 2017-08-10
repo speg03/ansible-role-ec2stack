@@ -1,5 +1,6 @@
 ---
 ec2stack_region: ap-northeast-1
+ec2stack_ssh_location: 127.0.0.1/32
 
 ec2stack_networks:
   ap-northeast-1:
@@ -11,5 +12,16 @@ ec2stack_networks:
         - az: c
           cidr: 172.31.1.0/24
 
+ec2stack_groups:
+  ssh:
+    description: Enable SSH access
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "{{ ec2stack_ssh_location }}"
+
 ec2stack_config:
   vpc: default
+  groups:
+    - ssh
