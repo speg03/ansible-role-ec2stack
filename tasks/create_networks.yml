@@ -1,0 +1,47 @@
+---
+- name: Create VPC
+  ec2_vpc_net:
+    region: "{{ ec2stack_region }}"
+    name: "ec2stack-{{ ec2stack_config.vpc }}"
+    cidr_block: "{{ ec2stack_networks[ec2stack_region][ec2stack_config.vpc].cidr_block }}"
+  register: result
+
+- set_fact: vpc="{{ result.vpc }}"
+
+- name: Create VPC internet gateway
+  ec2_vpc_igw:
+    region: "{{ ec2stack_region }}"
+    vpc_id: "{{ vpc.id }}"
+  register: result
+
+- set_fact: gateway_id="{{ result.gateway_id }}"
+
+- name: Gather default route table
+  ec2_vpc_route_table_facts:
+    region: "{{ ec2stack_region }}"
+    filters:
+      vpc-id: "{{ vpc.id }}"
+  register: result
+
+- set_fact: default_route_table="{{ result.route_tables[0] }}"
+
+- name: Add route to the Internet
+  ec2_vpc_route_table:
+    region: "{{ ec2stack_region }}"
+    vpc_id: "{{ vpc.id }}"
+    lookup: id
+    route_table_id: "{{ default_route_table.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ gateway_id }}"
+
+- name: Create VPC subnets
+  ec2_vpc_subnet:
+    region: "{{ ec2stack_region }}"
+    vpc_id: "{{ vpc.id }}"
+    az: "{{ ec2stack_region }}{{ item.az }}"
+    cidr: "{{ item.cidr }}"
+  with_items: "{{ ec2stack_networks[ec2stack_region][ec2stack_config.vpc].subnets }}"
+  register: result
+
+- set_fact: subnets="{{ result.results | map(attribute='subnet') | list }}"

@@ -1,2 +1,3 @@
 ---
-# tasks file for ec2stack
+- name: Run command
+  include: "{{ ec2stack_command }}.yml"
