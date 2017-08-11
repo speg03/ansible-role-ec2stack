@@ -1,0 +1,6 @@
+---
+- name: Terminate the instance
+  ec2:
+    region: "{{ ec2stack_region }}"
+    instance_id: "{{ ec2stack_state.instance_id }}"
+    state: absent
