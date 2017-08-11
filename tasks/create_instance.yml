@@ -18,6 +18,7 @@
     key_name: "{{ ec2stack_config.key_name }}"
     exact_count: 1
     count_tag: Name
+    wait: yes
   register: result
 
 - set_fact: ec2_instance="{{ result.tagged_instances[0] }}"
