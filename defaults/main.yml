@@ -1,6 +1,7 @@
 ---
 ec2stack_region: ap-northeast-1
 ec2stack_ssh_location: 127.0.0.1/32
+ec2stack_states_path: states
 
 ec2stack_images:
   ap-northeast-1:

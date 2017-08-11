@@ -18,3 +18,16 @@
     key_name: "{{ ec2stack_config.key_name }}"
     exact_count: 1
     count_tag: Name
+  register: result
+
+- set_fact: ec2_instance="{{ result.tagged_instances[0] }}"
+
+- name: Create states directory
+  file:
+    path: "{{ ec2stack_states_path }}"
+    state: directory
+
+- name: Save the instance state
+  template:
+    src: state.yml.j2
+    dest: "{{ ec2stack_states_path }}/{{ ec2stack_config.name }}.yml"
