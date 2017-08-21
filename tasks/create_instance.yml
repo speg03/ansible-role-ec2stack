@@ -5,17 +5,17 @@
   ec2:
     region: "{{ ec2stack_region }}"
     image: "{{
-      ec2stack_images[ec2stack_region][ec2stack_config.image]
-      | default(ec2stack_config.image)
+      ec2stack_images[ec2stack_region][ec2stack_env.image]
+      | default(ec2stack_env.image)
     }}"
-    instance_type: "{{ ec2stack_config.instance_type }}"
+    instance_type: "{{ ec2stack_env.instance_type }}"
     vpc_subnet_id: "{{ subnets | map(attribute='id') | shuffle | first }}"
-    assign_public_ip: "{{ ec2stack_config.assign_public_ip | default('yes') }}"
-    instance_profile_name: "{{ ec2stack_config.instance_profile_name | default() }}"
-    groups: "{{ ec2stack_config.groups }}"
+    assign_public_ip: "{{ ec2stack_env.assign_public_ip | default('yes') }}"
+    instance_profile_name: "{{ ec2stack_env.instance_profile_name | default() }}"
+    groups: "{{ ec2stack_env.groups }}"
     instance_tags:
-      Name: "{{ ec2stack_config.name }}"
-    key_name: "{{ ec2stack_config.key_name }}"
+      Name: "{{ ec2stack_name }}"
+    key_name: "{{ ec2stack_env.key_name }}"
     exact_count: 1
     count_tag: Name
     wait: yes
@@ -31,4 +31,4 @@
 - name: Save the instance state
   template:
     src: state.yml.j2
-    dest: "{{ ec2stack_states_path }}/{{ ec2stack_config.name }}.yml"
+    dest: "{{ ec2stack_states_path }}/{{ ec2stack_name }}.yml"

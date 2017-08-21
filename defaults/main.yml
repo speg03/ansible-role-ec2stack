@@ -27,8 +27,8 @@ ec2stack_groups:
         to_port: 22
         cidr_ip: "{{ ec2stack_ssh_location }}"
 
-ec2stack_config:
-  name: sample
+ec2stack_name: sample
+ec2stack_env:
   image: amazon
   instance_type: t2.micro
   key_name: ec2stack

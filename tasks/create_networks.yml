@@ -2,8 +2,8 @@
 - name: Create VPC
   ec2_vpc_net:
     region: "{{ ec2stack_region }}"
-    name: "ec2stack-{{ ec2stack_config.vpc }}"
-    cidr_block: "{{ ec2stack_networks[ec2stack_region][ec2stack_config.vpc].cidr_block }}"
+    name: "ec2stack-{{ ec2stack_env.vpc }}"
+    cidr_block: "{{ ec2stack_networks[ec2stack_region][ec2stack_env.vpc].cidr_block }}"
   register: result
 
 - set_fact: vpc="{{ result.vpc }}"
@@ -41,7 +41,7 @@
     vpc_id: "{{ vpc.id }}"
     az: "{{ ec2stack_region }}{{ item.az }}"
     cidr: "{{ item.cidr }}"
-  with_items: "{{ ec2stack_networks[ec2stack_region][ec2stack_config.vpc].subnets }}"
+  with_items: "{{ ec2stack_networks[ec2stack_region][ec2stack_env.vpc].subnets }}"
   register: result
 
 - set_fact: subnets="{{ result.results | map(attribute='subnet') | list }}"
@@ -53,4 +53,4 @@
     name: "{{ item }}"
     description: "{{ ec2stack_groups[item].description }}"
     rules: "{{ ec2stack_groups[item].rules }}"
-  with_items: "{{ ec2stack_config.groups }}"
+  with_items: "{{ ec2stack_env.groups }}"
