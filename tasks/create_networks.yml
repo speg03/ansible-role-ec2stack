@@ -41,6 +41,7 @@
     vpc_id: "{{ vpc.id }}"
     az: "{{ ec2stack_region }}{{ item.az }}"
     cidr: "{{ item.cidr }}"
+    map_public: "{{ item.map_public | default('yes') }}"
   with_items: "{{ ec2stack_networks[ec2stack_region][ec2stack_env.vpc].subnets }}"
   register: result
 

@@ -1,5 +1,5 @@
 ---
-- include: create_networks.yml
+- import_tasks: create_networks.yml
 
 - name: Create the instance
   ec2:
